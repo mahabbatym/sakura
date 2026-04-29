@@ -17,7 +17,7 @@ export const updateUserProfile = (id, data) => axios.put(`/users/${id}`, data, d
   headers: { 'Content-Type': 'multipart/form-data' },
 } : undefined);
  
-export const getTracks = () => axios.get('/tracks');
+export const getTracks = (params) => axios.get('/tracks', { params });
 export const getTrack = (id) => axios.get(`/tracks/${id}`);
 export const createTrack = (formData) => axios.post('/tracks', formData);
 export const searchTracks = (q) => axios.get(`/tracks/search?q=${q}`);

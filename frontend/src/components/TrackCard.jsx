@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { useMusic } from '../context/MusicContext';
 import { addTrackToPlaylist, getPlaylists } from '../api/api';
 import { Heart, Plus, Play, Pause } from 'lucide-react';
-import PremiumBadge from './PremiumBadge';
 
 const TrackCard = ({ track, tracksList }) => {
   const { playTrack, likedTracks, toggleLike, currentTrack, isPlaying, setIsPlaying, toMediaUrl } = useMusic();
@@ -50,12 +49,9 @@ const TrackCard = ({ track, tracksList }) => {
   };
 
   return (
-    <div className={`card ${isCurrentlyPlaying ? 'active-card' : ''}`} onClick={() => playTrack(track, tracksList)}>
+    <div className={`card track-card ${isCurrentlyPlaying ? 'active-card' : ''}`} onClick={() => playTrack(track, tracksList)}>
       <div className="card-image-wrapper">
         <img src={coverUrl} alt={track.title} loading="lazy" />
-        <div className="card-badges">
-          <PremiumBadge>FREE PREVIEW</PremiumBadge>
-        </div>
         <button className="play-overlay" onClick={handlePlayToggle} aria-label="Play track">
            {isCurrentlyPlaying && isPlaying ? <Pause className="ui-icon" /> : <Play className="ui-icon" />}
         </button>

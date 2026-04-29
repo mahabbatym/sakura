@@ -20,9 +20,18 @@ const Library = () => {
   const [success, setSuccess] = useState('');
   const { user, playTrack, toMediaUrl } = useMusic();
 
+  const fetchPlaylists = async () => {
+    try {
+      const res = await getPlaylists();
+      setPlaylists(res.data);
+      setError('');
+    } catch (err) {
+      setError(err.response?.data?.message || 'Плейлисттерді жүктеу сәтсіз аяқталды');
+    }
+  };
+
   useEffect(() => {
-    if (!user) window.location.href = '/login';
-    else fetchPlaylists();
+    if (user) fetchPlaylists();
   }, [user]);
 
   const { containerRef, pullDistance, refreshing } = usePullToRefresh(fetchPlaylists, !!user);
@@ -34,14 +43,9 @@ const Library = () => {
     }
   }, [searchParams]);
 
-  const fetchPlaylists = async () => {
-    try {
-      const res = await getPlaylists();
-      setPlaylists(res.data);
-    } catch (err) {
-      setError(err.response?.data?.message || 'Плейлисттерді жүктеу сәтсіз аяқталды');
-    }
-  };
+  if (!user) {
+    return <main className="main-content"><p>Жүктелуде...</p></main>;
+  }
 
   const handleCreate = async (e) => {
     e.preventDefault();
@@ -142,7 +146,10 @@ const Library = () => {
       <div className="pull-refresh-indicator" style={{ height: `${pullDistance}px` }}>
         <span>{refreshing ? 'Жаңартылуда...' : 'Жаңарту үшін тартыңыз'}</span>
       </div>
-      <h2 className="section-title">Менің плейлисттерім</h2>
+      <div className="library-header">
+        <p className="text-muted">Your Library</p>
+        <h2 className="section-title">Менің плейлисттерім</h2>
+      </div>
       {error ? <p className="error-text">{error}</p> : null}
       {success ? <p className="success-text">{success}</p> : null}
 
@@ -163,7 +170,7 @@ const Library = () => {
 
       <div className="grid-cards">
         {playlists.map(p => (
-          <div key={p.id} className="card" onClick={() => handleViewPlaylist(p.id)}>
+          <div key={p.id} className="card playlist-card" onClick={() => handleViewPlaylist(p.id)}>
             <img src={p.cover_image ? toMediaUrl(p.cover_image) : 'https://via.placeholder.com/150/F48FB1/FFFFFF?text=Playlist'} alt={p.name} />
             <h4>{p.name}</h4>
             <p>{p.Tracks?.length || 0} трек</p>
@@ -173,6 +180,13 @@ const Library = () => {
           </div>
         ))}
       </div>
+
+      {!playlists.length ? (
+        <div className="empty-state">
+          <h3>Әлі плейлист жоқ</h3>
+          <p>Жоғарыдағы форма арқылы бірінші плейлистіңізді жасаңыз.</p>
+        </div>
+      ) : null}
 
       {selectedPlaylist && (
         <div className="playlist-details">

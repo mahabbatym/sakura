@@ -5,21 +5,28 @@ import { getCache, setCache } from '../utils/cache.js';
 export const getAllTracks = async (req, res) => {
   try {
     const page = Math.max(1, Number(req.query.page || 1));
-    const limit = Math.min(100, Math.max(1, Number(req.query.limit || 20)));
-    const offset = (page - 1) * limit;
-    const cacheKey = `tracks:${page}:${limit}`;
+    const rawLimit = req.query.limit;
+    const limit = rawLimit === 'all'
+      ? null
+      : Math.min(1000, Math.max(1, Number(rawLimit || 100)));
+    const offset = limit === null ? 0 : (page - 1) * limit;
+    const cacheKey = `tracks:${page}:${rawLimit || limit || 'all'}`;
     const cached = await getCache(cacheKey);
     if (cached) return res.json(cached);
 
-    const tracks = await Track.findAll({
+    const query = {
       include: [{ model: Artist, attributes: ['id', 'name', 'image'] }],
       order: [['createdAt', 'DESC']],
-      limit,
-      offset,
-    });
+    };
+    if (limit !== null) {
+      query.limit = limit;
+      query.offset = offset;
+    }
+
+    const tracks = await Track.findAll(query);
     await setCache(cacheKey, tracks, 600);
     res.setHeader('X-Page', String(page));
-    res.setHeader('X-Limit', String(limit));
+    res.setHeader('X-Limit', String(limit ?? 'all'));
     res.json(tracks);
   } catch (err) {
     res.status(500).json({ message: err.message });

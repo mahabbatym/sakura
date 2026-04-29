@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Check } from 'lucide-react';
 import { upgradeSubscription } from '../api/api';
 import PaymentForm from '../components/PaymentForm';
 
@@ -27,10 +28,22 @@ const Pricing = () => {
       <div className="pricing-grid">
         {plans.map((plan) => (
           <article key={plan.id} className={`pricing-card ${selectedPlan === plan.id ? 'active' : ''}`}>
-            <h3>{plan.title}</h3>
+            <div className="pricing-card-head">
+              <h3>{plan.title}</h3>
+              {selectedPlan === plan.id ? <span className="pricing-badge">Таңдалды</span> : null}
+            </div>
             <p className="pricing-price">{plan.price}</p>
-            {plan.features.map((feature) => <p key={feature}>{feature}</p>)}
-            <button onClick={() => setSelectedPlan(plan.id)}>Таңдау</button>
+            <div className="pricing-features">
+              {plan.features.map((feature) => (
+                <p key={feature} className="pricing-feature">
+                  <Check className="ui-icon" />
+                  <span>{feature}</span>
+                </p>
+              ))}
+            </div>
+            <button type="button" className="pricing-select-btn" onClick={() => setSelectedPlan(plan.id)}>
+              {selectedPlan === plan.id ? 'Жоспар таңдалды' : 'Осы жоспарды таңдау'}
+            </button>
           </article>
         ))}
       </div>

@@ -82,7 +82,22 @@ const songs = [
   "Ayau Bapi Sen emes",
   "Irina Kairatovna 5000",
   "Dequine Makhabbat",
-  "Alem Turaly"
+  "Alem Turaly",
+  "The Weeknd Blinding Lights",
+  "The Neighbourhood Sweater Weather",
+  "The Weeknd Daft Punk Starboy",
+  "Harry Styles As It Was",
+  "Lewis Capaldi Someone You Loved",
+  "Drake Wizkid Kyla One Dance",
+  "The Kid LAROI Justin Bieber STAY",
+  "Imagine Dragons Believer",
+  "Billie Eilish Khalid lovely",
+  "Coldplay Yellow",
+  "Lord Huron The Night We Met",
+  "Vance Joy Riptide",
+  "Lady Gaga Bruno Mars Die With A Smile",
+  "Alex Warren Ordinary",
+  "sombr back to friends"
 ];
 
 async function searchItunes(query) {

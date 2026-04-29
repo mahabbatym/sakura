@@ -13,7 +13,7 @@ const Search = () => {
 
   const fetchTracks = async () => {
     try {
-      const res = await getTracks();
+      const res = await getTracks({ limit: 'all' });
       setAllTracks(res.data);
     } catch (err) {
       setError(err.response?.data?.message || 'Тректерді жүктеу сәтсіз аяқталды');

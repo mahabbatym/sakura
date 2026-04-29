@@ -9,7 +9,6 @@ import { ChevronUp, Music2 } from 'lucide-react';
 
 const AppContent = () => {
   const { currentTrack } = useMusic();
-  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [playerOpen, setPlayerOpen] = useState(false);
 
   useEffect(() => {
@@ -18,15 +17,14 @@ const AppContent = () => {
     }
   }, [currentTrack]);
 
-  const toggleSidebar = () => setSidebarOpen(!sidebarOpen);
   const openPlayer = () => setPlayerOpen(true);
 
   return (
     <BrowserRouter>
-      <div className={`app-container ${!sidebarOpen ? 'sidebar-closed' : ''} ${!playerOpen ? 'player-closed' : ''}`}>
-        <Sidebar isOpen={sidebarOpen} />
-        <main className="main-content">
-          <AppRouter toggleSidebar={toggleSidebar} />
+      <div className={`app-container ${!playerOpen ? 'player-closed' : ''}`}>
+        <Sidebar />
+        <main className="app-main-shell">
+          <AppRouter />
         </main>
         <BottomNav />
         {playerOpen ? <Player onClose={() => setPlayerOpen(false)} /> : null}

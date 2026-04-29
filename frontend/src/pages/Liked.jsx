@@ -11,7 +11,7 @@ const Liked = () => {
   const [likedTracksData, setLikedTracksData] = useState([]);
 
   const fetchAll = async () => {
-    const res = await getTracks();
+    const res = await getTracks({ limit: 'all' });
     setTracks(res.data);
   };
 

@@ -7,12 +7,25 @@ const MusicContext = createContext();
 
 export const useMusic = () => useContext(MusicContext);
 
+const readStoredJson = (key, fallback) => {
+  try {
+    const raw = localStorage.getItem(key);
+    return raw ? JSON.parse(raw) : fallback;
+  } catch {
+    return fallback;
+  }
+};
+
 export const MusicProvider = ({ children }) => {
   const [currentTrack, setCurrentTrack] = useState(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [queue, setQueue] = useState([]);
-  const [user, setUser] = useState(null);
-  const [likedTracks, setLikedTracks] = useState([]);
+  const [user, setUser] = useState(() => readStoredJson('user', null));
+  const [likedTracks, setLikedTracks] = useState(() => {
+    const storedUser = readStoredJson('user', null);
+    if (Array.isArray(storedUser?.likedTracks)) return storedUser.likedTracks;
+    return readStoredJson('likedTracks', []);
+  });
   const [repeatMode, setRepeatMode] = useState('off');
   const [shuffleEnabled, setShuffleEnabled] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
@@ -26,20 +39,6 @@ export const MusicProvider = ({ children }) => {
     if (/^https?:\/\//i.test(path)) return path;
     return `${mediaBaseUrl}${path.startsWith('/') ? '' : '/'}${path}`;
   };
-
-  useEffect(() => {
-    const storedUser = localStorage.getItem('user');
-    if (storedUser) {
-      const parsedUser = JSON.parse(storedUser);
-      setUser(parsedUser);
-      if (Array.isArray(parsedUser.likedTracks)) {
-        setLikedTracks(parsedUser.likedTracks);
-        return;
-      }
-    }
-    const storedLikes = localStorage.getItem('likedTracks');
-    if (storedLikes) setLikedTracks(JSON.parse(storedLikes));
-  }, []);
 
   useEffect(() => {
     if (Array.isArray(user?.likedTracks)) {
