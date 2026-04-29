@@ -3,6 +3,7 @@ import { useSearchParams } from 'react-router-dom';
 import { getPlaylists, createPlaylist, deletePlaylist, getPlaylist, removeTrackFromPlaylist, updatePlaylist } from '../api/api';
 import { useMusic } from '../context/MusicContext';
 import { Play, Shuffle, Trash2 } from 'lucide-react';
+import { usePullToRefresh } from '../hooks/usePullToRefresh';
 
 const Library = () => {
   const [searchParams] = useSearchParams();
@@ -23,6 +24,8 @@ const Library = () => {
     if (!user) window.location.href = '/login';
     else fetchPlaylists();
   }, [user]);
+
+  const { containerRef, pullDistance, refreshing } = usePullToRefresh(fetchPlaylists, !!user);
 
   useEffect(() => {
     if (searchParams.get('create') === '1') {
@@ -135,7 +138,10 @@ const Library = () => {
   };
 
   return (
-    <main className="main-content">
+    <main className="main-content page-refresh-root" ref={containerRef}>
+      <div className="pull-refresh-indicator" style={{ height: `${pullDistance}px` }}>
+        <span>{refreshing ? 'Жаңартылуда...' : 'Жаңарту үшін тартыңыз'}</span>
+      </div>
       <h2 className="section-title">Менің плейлисттерім</h2>
       {error ? <p className="error-text">{error}</p> : null}
       {success ? <p className="success-text">{success}</p> : null}

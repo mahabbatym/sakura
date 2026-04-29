@@ -35,6 +35,30 @@ const User = sequelize.define('User', {
     type: DataTypes.JSONB,
     defaultValue: [],
   },
+  subscriptionPlan: {
+    type: DataTypes.ENUM('free', 'premium', 'artist_pro'),
+    defaultValue: 'free',
+  },
+  subscriptionExpiry: {
+    type: DataTypes.DATE,
+    allowNull: true,
+  },
+  playCount: {
+    type: DataTypes.INTEGER,
+    defaultValue: 0,
+  },
+  playCountResetAt: {
+    type: DataTypes.DATE,
+    allowNull: true,
+  },
+  following: {
+    type: DataTypes.JSONB,
+    defaultValue: [],
+  },
+  followers: {
+    type: DataTypes.JSONB,
+    defaultValue: [],
+  },
   refresh_token_hash: {
     type: DataTypes.STRING,
     allowNull: true,

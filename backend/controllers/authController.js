@@ -133,3 +133,17 @@ export const logout = async (req, res) => {
 export const getMe = async (req, res) => {
   res.json(req.user);
 };
+
+export const googleCallback = async (req, res) => {
+  try {
+    const user = req.user;
+    if (!user) return res.status(401).json({ message: 'Google auth failed' });
+    const accessToken = generateAccessToken(user.id);
+    const refreshToken = generateRefreshToken(user.id);
+    user.refresh_token_hash = await bcrypt.hash(refreshToken, REFRESH_SALT_ROUNDS);
+    await user.save();
+    res.json(buildAuthPayload(user, accessToken, refreshToken));
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};

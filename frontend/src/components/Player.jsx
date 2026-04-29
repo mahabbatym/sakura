@@ -1,12 +1,16 @@
 import { useState, useEffect } from 'react';
 import { useMusic } from '../context/MusicContext';
-import { SkipBack, SkipForward, Play, Pause, Volume2, X } from 'lucide-react';
+import { SkipBack, SkipForward, Play, Pause, Volume2, X, Shuffle, Repeat, Repeat1, Moon, VolumeX } from 'lucide-react';
+import WaveformVisualizer from './WaveformVisualizer';
 
 const Player = ({ onClose }) => {
-  const { currentTrack, isPlaying, setIsPlaying, nextTrack, prevTrack, audioRef, toMediaUrl } = useMusic();
+  const {
+    currentTrack, isPlaying, setIsPlaying, nextTrack, prevTrack, audioRef, toMediaUrl,
+    repeatMode, setRepeatMode, shuffleEnabled, setShuffleEnabled,
+    isMuted, setIsMuted, volume, setVolume, setSleepTimerMinutes,
+  } = useMusic();
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
-  const [volume, setVolume] = useState(0.7);
 
   useEffect(() => {
     if (!audioRef?.current) return;
@@ -69,6 +73,7 @@ const Player = ({ onClose }) => {
       </div>
       
       <div className="player-center">
+        <WaveformVisualizer />
         <div className="player-controls">
           <button onClick={prevTrack} className="control-btn" aria-label="Previous">
             <SkipBack className="ui-icon" />
@@ -90,7 +95,14 @@ const Player = ({ onClose }) => {
       </div>
       
       <div className="player-right">
-        <Volume2 className="ui-icon" />
+        <button className={`icon-btn ${shuffleEnabled ? 'active-pill' : ''}`} onClick={() => setShuffleEnabled(!shuffleEnabled)}><Shuffle className="ui-icon" /></button>
+        <button className={`icon-btn ${repeatMode !== 'off' ? 'active-pill' : ''}`} onClick={() => setRepeatMode(repeatMode === 'off' ? 'all' : repeatMode === 'all' ? 'one' : 'off')}>
+          {repeatMode === 'one' ? <Repeat1 className="ui-icon" /> : <Repeat className="ui-icon" />}
+        </button>
+        <button className="icon-btn" onClick={() => setSleepTimerMinutes(15)}><Moon className="ui-icon" /></button>
+        <button className="icon-btn" onClick={() => setIsMuted(!isMuted)}>
+          {isMuted ? <VolumeX className="ui-icon" /> : <Volume2 className="ui-icon" />}
+        </button>
         <input
           type="range"
           min="0"

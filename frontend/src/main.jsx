@@ -8,3 +8,20 @@ ReactDOM.createRoot(document.getElementById('root')).render(
     <App />
   </React.StrictMode>
 );
+
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js').catch(() => {});
+  });
+}
+
+if ('PerformanceObserver' in window) {
+  try {
+    const observer = new PerformanceObserver((list) => {
+      list.getEntries().forEach(() => {});
+    });
+    observer.observe({ type: 'largest-contentful-paint', buffered: true });
+    observer.observe({ type: 'layout-shift', buffered: true });
+  } catch {
+  }
+}

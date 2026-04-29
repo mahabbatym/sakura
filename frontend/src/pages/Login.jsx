@@ -109,6 +109,16 @@ const Login = () => {
             {fieldErrors.password ? <p className="field-error">{fieldErrors.password}</p> : null}
           </div>
           <button type="submit" disabled={loading}>{loading ? 'Жүктелуде...' : 'Кіру'}</button>
+          <button
+            type="button"
+            className="google-auth-btn"
+            onClick={() => {
+              const base = (import.meta.env.VITE_API_URL || 'http://localhost:5001/api').replace(/\/$/, '');
+              window.location.href = `${base}/auth/google`;
+            }}
+          >
+            Google арқылы кіру
+          </button>
         </form>
         <div className="auth-link">
           Тіркелмегенсіз бе? <Link to="/register">Тіркелу</Link>

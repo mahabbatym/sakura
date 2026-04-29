@@ -3,19 +3,23 @@ import { useEffect, useState } from 'react';
 import { getTracks } from '../api/api';
 import TrackCard from '../components/TrackCard';
 import { Heart, Play, Shuffle } from 'lucide-react';
+import { usePullToRefresh } from '../hooks/usePullToRefresh';
 
 const Liked = () => {
   const { likedTracks, playTrack } = useMusic();
   const [tracks, setTracks] = useState([]);
   const [likedTracksData, setLikedTracksData] = useState([]);
 
+  const fetchAll = async () => {
+    const res = await getTracks();
+    setTracks(res.data);
+  };
+
   useEffect(() => {
-    const fetchAll = async () => {
-      const res = await getTracks();
-      setTracks(res.data);
-    };
     fetchAll();
   }, []);
+
+  const { containerRef, pullDistance, refreshing } = usePullToRefresh(fetchAll, true);
 
   useEffect(() => {
     setLikedTracksData(tracks.filter(t => likedTracks.includes(t.id)));
@@ -37,7 +41,10 @@ const Liked = () => {
   };
 
   return (
-    <main className="main-content">
+    <main className="main-content page-refresh-root" ref={containerRef}>
+      <div className="pull-refresh-indicator" style={{ height: `${pullDistance}px` }}>
+        <span>{refreshing ? 'Жаңартылуда...' : 'Жаңарту үшін тартыңыз'}</span>
+      </div>
       <h2 className="section-title"><Heart className="ui-icon" /> Сүйікті тректерім</h2>
       <div className="playlist-play-actions">
         <button type="button" className="icon-btn" onClick={() => playLiked('sequence')}>

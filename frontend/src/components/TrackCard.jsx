@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useMusic } from '../context/MusicContext';
 import { addTrackToPlaylist, getPlaylists } from '../api/api';
 import { Heart, Plus, Play, Pause } from 'lucide-react';
+import PremiumBadge from './PremiumBadge';
 
 const TrackCard = ({ track, tracksList }) => {
   const { playTrack, likedTracks, toggleLike, currentTrack, isPlaying, setIsPlaying, toMediaUrl } = useMusic();
@@ -52,6 +53,9 @@ const TrackCard = ({ track, tracksList }) => {
     <div className={`card ${isCurrentlyPlaying ? 'active-card' : ''}`} onClick={() => playTrack(track, tracksList)}>
       <div className="card-image-wrapper">
         <img src={coverUrl} alt={track.title} loading="lazy" />
+        <div className="card-badges">
+          <PremiumBadge>FREE PREVIEW</PremiumBadge>
+        </div>
         <button className="play-overlay" onClick={handlePlayToggle} aria-label="Play track">
            {isCurrentlyPlaying && isPlaying ? <Pause className="ui-icon" /> : <Play className="ui-icon" />}
         </button>
@@ -66,7 +70,7 @@ const TrackCard = ({ track, tracksList }) => {
       
       <div className="card-actions" onClick={e => e.stopPropagation()}>
         <button className="icon-btn card-action-btn" onClick={() => toggleLike(track.id)} aria-label="Like">
-          <Heart className={`ui-icon ${isLiked ? 'liked' : ''}`} />
+          <Heart className={`ui-icon ${isLiked ? 'liked heart-burst' : ''}`} />
         </button>
         <div className="dropdown-container">
           <button className="icon-btn card-action-btn" onClick={fetchPlaylists} aria-label="Add to playlist">

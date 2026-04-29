@@ -71,3 +71,52 @@ export const updateUserProfile = async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 };
+
+export const getSubscription = async (req, res) => {
+  try {
+    const user = await User.findByPk(req.user.id, {
+      attributes: ['id', 'subscriptionPlan', 'subscriptionExpiry', 'playCount'],
+    });
+    if (!user) return res.status(404).json({ message: 'User not found' });
+    res.json(user);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+export const upgradeSubscription = async (req, res) => {
+  try {
+    const { plan } = req.body;
+    const planDurations = {
+      free: 0,
+      premium: 30,
+      artist_pro: 30,
+    };
+    if (!planDurations[plan] && plan !== 'free') {
+      return res.status(400).json({ message: 'Жоспар дұрыс емес' });
+    }
+
+    const user = await User.findByPk(req.user.id);
+    if (!user) return res.status(404).json({ message: 'User not found' });
+
+    user.subscriptionPlan = plan;
+    if (plan === 'free') {
+      user.subscriptionExpiry = null;
+    } else {
+      const expiresAt = new Date();
+      expiresAt.setDate(expiresAt.getDate() + planDurations[plan]);
+      user.subscriptionExpiry = expiresAt;
+    }
+    await user.save();
+
+    res.json({
+      message: 'Жазылым сәтті жаңартылды',
+      subscription: {
+        plan: user.subscriptionPlan,
+        expiry: user.subscriptionExpiry,
+      },
+    });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};

@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { getTracks } from '../api/api';
 import TrackCard from '../components/TrackCard';
 import { Search as SearchIcon } from 'lucide-react';
+import { usePullToRefresh } from '../hooks/usePullToRefresh';
 
 const Search = () => {
   const [query, setQuery] = useState('');
@@ -10,20 +11,22 @@ const Search = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
-  useEffect(() => {
-    const fetchTracks = async () => {
-      try {
-        const res = await getTracks();
-        setAllTracks(res.data);
-      } catch (err) {
-        setError(err.response?.data?.message || 'Тректерді жүктеу сәтсіз аяқталды');
-      } finally {
-        setLoading(false);
-      }
-    };
+  const fetchTracks = async () => {
+    try {
+      const res = await getTracks();
+      setAllTracks(res.data);
+    } catch (err) {
+      setError(err.response?.data?.message || 'Тректерді жүктеу сәтсіз аяқталды');
+    } finally {
+      setLoading(false);
+    }
+  };
 
+  useEffect(() => {
     fetchTracks();
   }, []);
+
+  const { containerRef, pullDistance, refreshing } = usePullToRefresh(fetchTracks, true);
 
   useEffect(() => {
     if (!query.trim()) {
@@ -39,7 +42,10 @@ const Search = () => {
   }, [query, allTracks]);
 
   return (
-    <section className="main-content">
+    <section className="main-content page-refresh-root" ref={containerRef}>
+      <div className="pull-refresh-indicator" style={{ height: `${pullDistance}px` }}>
+        <span>{refreshing ? 'Жаңартылуда...' : 'Жаңарту үшін тартыңыз'}</span>
+      </div>
       <header className="top-bar sticky">
         <div className="search-bar">
           <span className="search-icon" aria-hidden="true"><SearchIcon className="ui-icon" /></span>
@@ -52,7 +58,11 @@ const Search = () => {
         </div>
       </header>
 
-      {loading ? <p className="text-muted">Жүктелуде...</p> : null}
+      {loading ? (
+        <div className="skeleton-grid">
+          {Array.from({ length: 6 }).map((_, index) => <div key={index} className="skeleton-card" />)}
+        </div>
+      ) : null}
       {error ? <p className="error-text">{error}</p> : null}
       
       {!loading && !error && filtered.length === 0 ? (
