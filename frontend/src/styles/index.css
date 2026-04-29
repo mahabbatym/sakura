@@ -72,6 +72,7 @@ button,
 .app-main-shell {
   grid-area: main;
   min-width: 0;
+  min-height: 0;
   overflow: hidden;
 }
  
@@ -172,6 +173,7 @@ button,
 .main-content {
   overflow-y: auto;
   min-width: 0;
+  min-height: 0;
   height: 100%;
   padding: 24px 28px 116px;
   border-radius: 18px;
@@ -659,6 +661,8 @@ button,
 
 .page-refresh-root {
   overflow: auto;
+  height: 100%;
+  min-height: 0;
   overscroll-behavior-y: contain;
 }
 
@@ -676,6 +680,8 @@ button,
 
 .route-transition {
   animation: routeFadeSlide 0.3s ease;
+  height: 100%;
+  min-height: 0;
 }
 
 @keyframes routeFadeSlide {
