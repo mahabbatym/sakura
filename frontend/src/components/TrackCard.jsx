@@ -51,7 +51,7 @@ const TrackCard = ({ track, tracksList }) => {
   return (
     <div className={`card ${isCurrentlyPlaying ? 'active-card' : ''}`} onClick={() => playTrack(track, tracksList)}>
       <div className="card-image-wrapper">
-        <img src={coverUrl} alt={track.title} />
+        <img src={coverUrl} alt={track.title} loading="lazy" />
         <button className="play-overlay" onClick={handlePlayToggle} aria-label="Play track">
            {isCurrentlyPlaying && isPlaying ? <Pause className="ui-icon" /> : <Play className="ui-icon" />}
         </button>

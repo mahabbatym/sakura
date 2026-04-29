@@ -76,6 +76,9 @@ const Register = () => {
     try {
       const res = await register({ username, email, password });
       localStorage.setItem('token', res.data.token);
+      if (res.data.refreshToken) {
+        localStorage.setItem('refreshToken', res.data.refreshToken);
+      }
       localStorage.setItem('user', JSON.stringify(res.data.user));
       setUser(res.data.user);
       setSuccess('Тіркелу сәтті аяқталды');

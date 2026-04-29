@@ -6,6 +6,8 @@ export const removeTrackFromPlaylist = (playlistId, trackId) => axios.delete(`/p
  
 export const register = (data) => axios.post('/auth/register', data);
 export const login = (data) => axios.post('/auth/login', data);
+export const refreshToken = (refreshToken) => axios.post('/auth/refresh', { refreshToken });
+export const logout = (refreshToken) => axios.post('/auth/logout', { refreshToken });
 export const getMe = () => axios.get('/auth/me');
  
 export const getUserProfile = (id) => axios.get(`/users/${id}`);

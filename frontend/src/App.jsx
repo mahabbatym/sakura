@@ -4,6 +4,7 @@ import AppRouter from './routes/AppRouter';
 import { MusicProvider, useMusic } from './context/MusicContext';
 import Sidebar from './components/Sidebar';
 import Player from './components/Player';
+import BottomNav from './components/BottomNav';
 import { ChevronUp, Music2 } from 'lucide-react';
 
 const AppContent = () => {
@@ -27,6 +28,7 @@ const AppContent = () => {
         <main className="main-content">
           <AppRouter toggleSidebar={toggleSidebar} />
         </main>
+        <BottomNav />
         {playerOpen ? <Player onClose={() => setPlayerOpen(false)} /> : null}
         {!playerOpen && currentTrack ? (
           <button className="player-reopen" onClick={openPlayer} aria-label="Open player">

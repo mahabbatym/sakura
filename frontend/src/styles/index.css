@@ -46,6 +46,18 @@ body {
   transition: grid-template-columns 0.3s ease;
 }
 
+button,
+.icon-btn,
+.menu-items a,
+.auth-btn,
+.play-overlay,
+.control-btn,
+.hamburger-btn,
+.toggle-right-btn {
+  min-width: 44px;
+  min-height: 44px;
+}
+
 .app-container.player-closed {
   grid-template-rows: 1fr;
   grid-template-areas: "sidebar main";
@@ -161,7 +173,7 @@ body {
 .main-content {
   grid-area: main;
   overflow-y: auto;
-  padding: 12px 16px;
+  padding: 12px 16px 96px;
   background-color: var(--bg-main);
 }
  
@@ -583,6 +595,27 @@ body {
 
 .player-reopen:hover {
   border-color: var(--accent);
+}
+
+.bottom-nav {
+  display: none;
+}
+
+.bottom-nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  text-decoration: none;
+  color: var(--text-secondary);
+  font-size: 11px;
+  border-radius: 10px;
+}
+
+.bottom-nav-item.active {
+  color: var(--text-primary);
+  background: rgba(255, 122, 160, 0.18);
 }
 .player-left {
   display: flex;
@@ -1060,15 +1093,60 @@ body {
 @media (max-width: 480px) {
   .app-container {
     grid-template-columns: 1fr;
+    grid-template-rows: 1fr auto auto;
     grid-template-areas:
       "main"
-      "player";
+      "player"
+      "bottomnav";
   }
   .app-container.player-closed {
-    grid-template-areas: "main";
+    grid-template-rows: 1fr auto;
+    grid-template-areas:
+      "main"
+      "bottomnav";
   }
   .sidebar {
     display: none;
+  }
+  .main-content {
+    padding: 12px 12px 120px;
+  }
+  .player-bar {
+    position: sticky;
+    bottom: 64px;
+    z-index: 20;
+    padding: 8px 10px;
+    gap: 8px;
+  }
+  .player-left {
+    width: 42%;
+  }
+  .player-center {
+    width: 58%;
+  }
+  .player-right {
+    display: none;
+  }
+  .player-close {
+    top: -40px;
+    left: auto;
+    right: 10px;
+  }
+  .bottom-nav {
+    grid-area: bottomnav;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    align-items: stretch;
+    gap: 6px;
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: 8px 10px calc(8px + env(safe-area-inset-bottom));
+    border-top: 1px solid var(--border-color);
+    background: rgba(15, 19, 27, 0.95);
+    backdrop-filter: blur(8px);
+    z-index: 25;
   }
   .grid-cards {
     grid-template-columns: 1fr 1fr;

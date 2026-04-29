@@ -58,7 +58,7 @@ const Player = ({ onClose }) => {
         <X className="ui-icon" />
       </button>
       <div className="player-left">
-        <img src={coverUrl} alt="cover" className="player-cover" />
+        <img src={coverUrl} alt="cover" className="player-cover" loading="lazy" />
         <div className="player-track-info">
           <h4>{currentTrack.title}</h4>
           <div className="player-artist-row">

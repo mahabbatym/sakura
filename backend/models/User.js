@@ -35,14 +35,18 @@ const User = sequelize.define('User', {
     type: DataTypes.JSONB,
     defaultValue: [],
   },
+  refresh_token_hash: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
 }, {
   hooks: {
     beforeCreate: async (user) => {
-      user.password_hash = await bcrypt.hash(user.password_hash, 10);
+      user.password_hash = await bcrypt.hash(user.password_hash, 12);
     },
     beforeUpdate: async (user) => {
       if (user.changed('password_hash')) {
-        user.password_hash = await bcrypt.hash(user.password_hash, 10);
+        user.password_hash = await bcrypt.hash(user.password_hash, 12);
       }
     },
   },

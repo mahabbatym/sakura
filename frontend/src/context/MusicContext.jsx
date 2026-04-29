@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, useEffect, useRef } from 'react';
 import { updateUserProfile } from '../api/api';
+import { logout as logoutApi } from '../api/api';
 
 const MusicContext = createContext();
 
@@ -129,8 +130,16 @@ export const MusicProvider = ({ children }) => {
     });
   };
 
-  const logout = () => {
+  const logout = async () => {
+    const refreshToken = localStorage.getItem('refreshToken');
+    if (refreshToken) {
+      try {
+        await logoutApi(refreshToken);
+      } catch {
+      }
+    }
     localStorage.removeItem('token');
+    localStorage.removeItem('refreshToken');
     localStorage.removeItem('user');
     localStorage.removeItem('likedTracks');
     setUser(null);
