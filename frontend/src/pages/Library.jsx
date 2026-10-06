@@ -16,7 +16,7 @@ const Library = () => {
   const [playlistCoverUrl, setPlaylistCoverUrl] = useState('');
   const [playlistCoverFile, setPlaylistCoverFile] = useState(null);
   const [playlistMode, setPlaylistMode] = useState('sequence');
-  const [error, setError] = useState('');
+  const [error, setError] = useState(''); 
   const [success, setSuccess] = useState('');
   const { user, playTrack, toMediaUrl } = useMusic();
 
